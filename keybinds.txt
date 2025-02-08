@@ -1,0 +1,5 @@
+Hey, here are the keybinds for the app:
+
+Enter -> Add the todo, to the todolist
+Ctrl + E -> Edit the first item in the todolist
+Ctrl + D -> Delete the first item in the todolist

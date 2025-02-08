@@ -11,6 +11,10 @@ function App() {
     localStorage.setItem('todos', JSON.stringify({ todos: newList }));
   }
 
+  function isEmpty(val){
+    return (val === undefined || val == null || val.length <= 0) ? true : false;
+}
+
   function handleAddTodos(newTodo) {
     if (!newTodo.trim()) return; // Disable empty todos to be added
     const newTodoList = [...todos, newTodo];
@@ -19,6 +23,7 @@ function App() {
 }
 
   function handleDeleteTodo(index) {
+    if (todos.length === 0) return;
     const newTodoList = todos.filter((todo, todoIndex) => {
       return todoIndex !== index
     })
@@ -35,6 +40,7 @@ function App() {
       inputRef.current?.focus();
     }, 0);
   }
+  
 
   useEffect(() => {
     if (!localStorage) {
@@ -54,7 +60,7 @@ function App() {
 
   return (
     <>
-      <TodoInput todoValue={todoValue} setTodoValue={setTodoValue} handleAddTodos={handleAddTodos} inputRef={inputRef} />
+      <TodoInput todos={todos} todoValue={todoValue} setTodoValue={setTodoValue} handleAddTodos={handleAddTodos} inputRef={inputRef} handleEditTodo={handleEditTodo} handleDeleteTodo={handleDeleteTodo} />
       <TodoList handleEditTodo={handleEditTodo} handleDeleteTodo={handleDeleteTodo} todos={todos} />
     </>
   )
