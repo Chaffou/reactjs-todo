@@ -15,12 +15,37 @@ function App() {
     return (val === undefined || val == null || val.length <= 0) ? true : false;
 }
 
-  function handleAddTodos(newTodo) {
-    if (!newTodo.trim()) return; // Disable empty todos to be added
-    const newTodoList = [...todos, newTodo];
-    persistData(newTodoList);
-    setTodos(newTodoList);
-}
+function handleAddTodos(newTodo) {
+  if (newTodo.trim() === "/help" || newTodo.trim() === "/h") {
+      alert("/keybinds /synthax");
+      setTodoValue('');
+      return;
+  }
+  if (newTodo.trim() === "/keybinds" || newTodo.trim() === "/k") {
+    alert("Enter -> Press new \nCtrl + E -> Edit first item \nCtrl + D -> Delete first item");
+    setTodoValue('');
+    return;
+  }
+  if (newTodo.trim() === "/synthax" || newTodo.trim() === "/s") {
+    alert("Your todo... [1-4]");
+    setTodoValue('');
+    return;
+  }
+
+  if (!newTodo.trim()) return; // Don't add empty todos
+
+  const match = newTodo.match(/\[(\d+)\]$/);  // Extract priority using regex
+  let priority = match ? parseInt(match[1], 10) : 0;
+  let task = match ? newTodo.replace(/\s*\[\d+\]$/, "").trim() : newTodo.trim();
+
+  if (isNaN(priority) || priority < 0 || priority > 4) priority = 0;
+
+  const newTodoItem = { task, priority };
+  const newTodoList = [...todos, newTodoItem];
+
+  persistData(newTodoList);
+  setTodos(newTodoList);
+} 
 
   function handleDeleteTodo(index) {
     if (todos.length === 0) return;
@@ -32,14 +57,17 @@ function App() {
   }
 
   function handleEditTodo(index) {
-    const valueToBeEdited = todos[index]
-    setTodoValue(valueToBeEdited)
-    handleDeleteTodo(index)
+    const { task, priority } = todos[index];
+    const formattedTask = priority > 0 ? `${task} [${priority}]` : task;
+
+    setTodoValue(formattedTask);
+    handleDeleteTodo(index);
 
     setTimeout(() => {
-      inputRef.current?.focus();
+        inputRef.current?.focus();
     }, 0);
-  }
+}
+
   
 
   useEffect(() => {
